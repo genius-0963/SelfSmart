@@ -15,7 +15,7 @@
       "created_date"
     ],
     "description": "Product catalog with attributes and pricing",
-    "record_count": 50,
+    "record_count": 100,
     "date_range": "N/A"
   },
   "sales": {
@@ -32,8 +32,8 @@
       "transaction_id"
     ],
     "description": "Daily sales transactions with timestamps and promotions",
-    "record_count": 5145,
-    "date_range": "2025-11-16 to 2026-02-13"
+    "record_count": 20463,
+    "date_range": "2025-08-25 to 2026-02-20"
   },
   "inventory": {
     "columns": [
@@ -52,8 +52,8 @@
       "stockout_reason"
     ],
     "description": "Inventory movements, stock levels, and replenishment",
-    "record_count": 4571,
-    "date_range": "2025-11-16 to 2026-02-13"
+    "record_count": 18323,
+    "date_range": "2025-08-25 to 2026-02-20"
   },
   "competitor_pricing": {
     "columns": [
@@ -66,7 +66,7 @@
       "last_updated"
     ],
     "description": "Competitor pricing and availability data",
-    "record_count": 150,
+    "record_count": 300,
     "date_range": "N/A"
   }
 }
