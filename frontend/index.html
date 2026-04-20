@@ -1,14 +1,552 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SmartShelf AI - Intelligent Chat Assistant</title>
-    <meta name="description" content="AI-powered conversational assistant with product recommendations" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Learning Chatbot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #f8f9fa;
+            padding: 30px;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .status-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .status-label {
+            color: #666;
+        }
+
+        .status-value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e9ecef;
+            background: white;
+        }
+
+        .chat-header h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .chat-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #fafbfc;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            margin: 0 10px;
+        }
+
+        .message.user .message-avatar {
+            background: #667eea;
+            order: 2;
+        }
+
+        .message.bot .message-avatar {
+            background: #28a745;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.user .message-content {
+            background: #667eea;
+            color: white;
+            order: 1;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e9ecef;
+        }
+
+        .message-sources {
+            font-size: 12px;
+            color: #666;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .message-sources a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .message-sources a:hover {
+            text-decoration: underline;
+        }
+
+        .chat-input {
+            padding: 20px 30px;
+            border-top: 1px solid #e9ecef;
+            background: white;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            border-color: #667eea;
+        }
+
+        .send-button {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .learn-section {
+            margin-top: 30px;
+        }
+
+        .learn-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .learn-button {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .learn-button:hover {
+            background: #218838;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .typing-indicator .message-avatar {
+            background: #28a745;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+            padding: 15px 20px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">AI</div>
+                <h1>Self-Learning Bot</h1>
+            </div>
+            
+            <div class="status-card">
+                <h3 style="margin-bottom: 15px; color: #333;">System Status</h3>
+                <div class="status-item">
+                    <span class="status-label">Status:</span>
+                    <span class="status-value">
+                        <span class="status-indicator"></span>
+                        <span id="status-text">Loading...</span>
+                    </span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Knowledge Items:</span>
+                    <span class="status-value" id="knowledge-count">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Learning:</span>
+                    <span class="status-value" id="learning-status">Idle</span>
+                </div>
+            </div>
+
+            <div class="learn-section">
+                <h3 style="margin-bottom: 10px; color: #333;">Teach the Bot</h3>
+                <input type="url" id="learn-url" class="learn-input" placeholder="Enter URL to learn from...">
+                <button onclick="learnFromUrl()" class="learn-button">Learn from URL</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="chat-header">
+                <h2>Chat with AI</h2>
+                <p>I'm learning from the internet continuously. Ask me anything!</p>
+            </div>
+
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot">
+                    <div class="message-avatar">AI</div>
+                    <div class="message-content">
+                        Hello! I'm a self-learning chatbot. I can learn from the internet and answer your questions. Try asking me something or teach me by providing URLs!
+                    </div>
+                </div>
+            </div>
+
+            <div class="typing-indicator" id="typing-indicator">
+                <div class="message-avatar">AI</div>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <div class="input-container">
+                    <input type="text" id="message-input" class="input-field" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                    <button onclick="sendMessage()" class="send-button" id="send-button">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let sessionId = 'user-' + Date.now();
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus();
+            setInterval(updateStatus, 10000); // Update status every 10 seconds
+        });
+
+        function updateStatus() {
+            fetch(`${API_BASE}/api/status`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('status-text').textContent = data.chatbot_status.status || 'Unknown';
+                    document.getElementById('knowledge-count').textContent = data.chatbot_status.knowledge_items || 0;
+                    document.getElementById('learning-status').textContent = data.chatbot_status.is_learning ? 'Active' : 'Idle';
+                })
+                .catch(error => {
+                    console.error('Status update failed:', error);
+                    document.getElementById('status-text').textContent = 'Offline';
+                });
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+            
+            // Clear input
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Send to API
+            fetch(`${API_BASE}/api/chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: message,
+                    session_id: sessionId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTypingIndicator();
+                addMessage(data.response, 'bot', data.sources, data.confidence);
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                console.error('Chat error:', error);
+                addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+            });
+        }
+
+        function addMessage(content, sender, sources = [], confidence = 0) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = sender === 'user' ? 'U' : 'AI';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = content;
+            
+            // Add sources if available
+            if (sources && sources.length > 0) {
+                const sourcesDiv = document.createElement('div');
+                sourcesDiv.className = 'message-sources';
+                sourcesDiv.innerHTML = '<strong>Sources:</strong><br>' + 
+                    sources.slice(0, 3).map(url => `<a href="${url}" target="_blank">${url}</a>`).join('<br>');
+                messageContent.appendChild(sourcesDiv);
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            messagesContainer.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typing-indicator').style.display = 'flex';
+            document.getElementById('send-button').disabled = true;
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typing-indicator').style.display = 'none';
+            document.getElementById('send-button').disabled = false;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function learnFromUrl() {
+            const urlInput = document.getElementById('learn-url');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('Please enter a valid URL');
+                return;
+            }
+
+            const button = event.target;
+            button.disabled = true;
+            button.textContent = 'Learning...';
+
+            fetch(`${API_BASE}/api/learn`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    urls: [url]
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                button.disabled = false;
+                button.textContent = 'Learn from URL';
+                urlInput.value = '';
+                
+                if (data.result.successful > 0) {
+                    addMessage(`I successfully learned from ${data.result.successful} URL(s)!`, 'bot');
+                } else {
+                    addMessage(`I couldn't learn from that URL. Please try a different one.`, 'bot');
+                }
+                
+                updateStatus();
+            })
+            .catch(error => {
+                button.disabled = false;
+                button.textContent = 'Learn from URL';
+                console.error('Learning error:', error);
+                addMessage('Sorry, I encountered an error while learning. Please try again.', 'bot');
+            });
+        }
+    </script>
+</body>
 </html>
