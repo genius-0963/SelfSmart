@@ -1,3 +1,5 @@
 {
-    "kiroAgent.configureMCP": "Disabled"
+    "kiroAgent.configureMCP": "Disabled",
+    "json.schemaDownload.enable": true,
+    "npm.fetchOnlinePackageInfo": true
 }
