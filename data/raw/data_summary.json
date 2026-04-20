@@ -1,10 +1,10 @@
 {
-  "generation_timestamp": "2026-02-14T14:27:00.946549",
+  "generation_timestamp": "2026-02-21T19:57:09.739401",
   "data_summary": {
-    "total_products": 50,
-    "total_sales_transactions": 5145,
-    "total_revenue": 591410.26,
-    "unique_skus": 50,
+    "total_products": 100,
+    "total_sales_transactions": 20463,
+    "total_revenue": 2290563.4299999997,
+    "unique_skus": 100,
     "categories": [
       "Health & Beauty",
       "Books & Media",
@@ -15,14 +15,14 @@
       "Food & Beverages",
       "Sports & Outdoors"
     ],
-    "date_range_days": 89,
-    "avg_daily_revenue": 6571.225111111111,
+    "date_range_days": 179,
+    "avg_daily_revenue": 12725.352388888887,
     "top_products_by_revenue": {
-      "44": 57306.06,
-      "41": 46800.5,
-      "42": 45336.3,
-      "31": 41338.65,
-      "7": 38189.19
+      "44": 119136.95,
+      "54": 99480.44,
+      "41": 87879.32999999999,
+      "72": 86461.45,
+      "61": 84342.4
     }
   }
 }
